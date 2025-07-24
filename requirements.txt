@@ -1,5 +1,5 @@
 Flask==2.3.3
-python-docx-template==0.16.7
-python-docx==0.8.11
 Werkzeug==2.3.7
 gunicorn==21.2.0
+python-docx==0.8.11
+docxtpl==0.16.7
