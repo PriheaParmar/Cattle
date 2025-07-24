@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cattle Claim</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #140d09;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #B17457 0%, #472c1f 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            background: #D8D2C2;
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            border: 1px solid #D8D2C2;
+            border-radius: 10px;
+            padding: 25px;
+            background: #fcf8ee;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #4A4947;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4A4947;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            background: #472c1f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group.half-width {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            align-items: end;
+        }
+
+        label {
+            font-weight: bolder;
+            color: #4A4947;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        input,
+        select,
+        textarea {
+            padding: 12px 15px;
+            border: 1px solid #4a49475a;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #efeade;
+            color: #2c1810;
+        }
+
+        /* Enhanced placeholder styling */
+        input::placeholder,
+        textarea::placeholder {
+            color: #8b6f47;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #472c1f;
+            box-shadow: 0 0 0 3px rgba(71, 44, 31, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Custom Select Styling */
+        .select-wrapper {
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: #efeade;
+            color: #8b6f47;
+            cursor: pointer;
+            padding: 12px 40px 12px 15px;
+            border: 1px solid #4a49475a;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23B17457' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        /* When select has a value, change text color */
+        select:valid {
+            color: #2c1810;
+        }
+
+        select:focus {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23472c1f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+
+        /* Custom option styling */
+        select option {
+            background: #efeade;
+            color: #2c1810;
+            padding: 8px;
+        }
+
+        select option:first-child {
+            color: #8b6f47;
+            font-style: italic;
+        }
+
+        .date-range {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .date-range span {
+            text-align: center;
+            font-weight: 500;
+            color: #7f8c8d;
+        }
+
+        .conditional-field {
+            background: #FAF7F0;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .conditional-field.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Photo Upload Section */
+        .photo-section {
+            background: #f4f0e8;
+            border: 2px dashed #B17457;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .photo-upload {
+            position: relative;
+            border: 2px dashed #8b6f47;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #faf8f3;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo-upload:hover {
+            border-color: #472c1f;
+            background: #f0ede5;
+        }
+
+        .photo-upload input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+        }
+
+        .photo-upload-text {
+            color: #8b6f47;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .photo-preview {
+            max-width: 100%;
+            max-height: 80px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .photo-name {
+            font-size: 0.8rem;
+            color: #472c1f;
+            word-break: break-all;
+        }
+
+        .submit-section {
+            background: linear-gradient(135deg, #B17457 0%, #472c1f 100%);
+            margin: 40px -40px -40px -40px;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: white;
+            color: #472c1f;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: #f8f5f0;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .form-group.half-width {
+                grid-template-columns: 1fr;
+            }
+
+            .photo-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+
+        /* Specific styling for certain fields */
+        input[type="tel"] {
+            letter-spacing: 1px;
+        }
+
+        input:-webkit-autofill {
+            background-color: none !important;
+            -webkit-box-shadow: 0 0 0 1000px #efeade inset !important;
+        }
+
+        input[type="date" i],
+        input[type="time" i] {
+            font-family: monospace;
+            padding-inline-start: 1px;
+            cursor: default;
+            padding: 10px;
+            opacity: 0.8;
+        }
+
+        .tag-number {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .policy-number {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* Enhanced validation styling */
+        .form-group input.valid {
+            border-color: #27ae60;
+            background: #e8f5e8;
+        }
+
+        .form-group input.invalid {
+            border-color: #e74c3c;
+            background: #ffeaea;
+        }
+
+        /* Photo upload icons */
+        .upload-icon {
+            width: 40px;
+            height: 40px;
+            background: #B17457;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: -10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="40px" fill="currentColor">
+                    <path
+                        d="M5 18.89H6.41421L15.7279 9.57627L14.3137 8.16206L5 17.4758V18.89ZM21 20.89H3V16.6473L16.435 3.21231C16.8256 2.82179 17.4587 2.82179 17.8492 3.21231L20.6777 6.04074C21.0682 6.43126 21.0682 7.06443 20.6777 7.45495L9.24264 18.89H21V20.89ZM15.7279 6.74785L17.1421 8.16206L18.5563 6.74785L17.1421 5.33363L15.7279 6.74785Z">
+                    </path>
+                </svg> Cattle Insurance Claim Report</h1>
+        </div>
+
+        <div class="form-container">
+            <form method="POST" action="/generate" enctype="multipart/form-data">
+
+                <!-- Basic Claim Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">1</span>
+                        Basic Claim Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="claimdate">Claim Date <span class="required">*</span></label>
+                            <input type="date" id="claimdate" name="claimdate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Report Date <span class="required">*</span></label>
+                            <input type="date" id="date" name="date" placeholder="dd-mm-yyyy" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="intimdate">Intimation Date <span class="required">*</span></label>
+                            <input type="date" id="intimdate" name="intimdate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="invdate">Investigation Date <span class="required">*</span></label>
+                            <input type="date" id="invdate" name="invdate" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Policy Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">2</span>
+                        Policy Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="policynumber">Policy Number <span class="required">*</span></label>
+                            <input type="text" id="policynumber" name="policynumber" class="policy-number"
+                                oninput="formatPolicyNumber(this)" placeholder="XXXX/XXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <div class="name">
+                                <label for="insuredname">Insured Name <span class="required">*</span></label>
+                                <div style="margin-bottom: 10px;">
+                                    <label
+                                        style="font-weight: normal; display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
+                                        <input type="checkbox" id="sameAsOwner" onchange="toggleInsuredName()"
+                                            style="margin: 0;">
+                                        Same as Owner Name
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="text" id="insuredname" name="insuredname"
+                                placeholder="Enter insured person's name" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Policy Period <span class="required">*</span></label>
+                            <div class="date-range">
+                                <input type="date" id="policyfrom" onchange="updatePolicyPeriod()" required>
+                                <span>to</span>
+                                <input type="date" id="policyto" onchange="updatePolicyPeriod()" required>
+                            </div>
+                            <input type="hidden" name="policyperiod" id="policyperiod">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Owner & Location Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">3</span>
+                        Owner & Location Details
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="ownername">Owner Name <span class="required">*</span></label>
+                            <input type="text" id="ownername" name="ownername" placeholder="Enter owner's full name"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ownercontact">Owner Contact <span class="required">*</span></label>
+                            <input type="tel" id="ownercontact" name="ownercontact" maxlength="10" pattern="\d{10}"
+                                title="Enter exactly 10 digits" placeholder="10-digit mobile number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location <span class="required">*</span></label>
+                            <input type="text" id="location" name="location" placeholder="Village/Town name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taluka">Taluka <span class="required">*</span></label>
+                            <input type="text" id="taluka" name="taluka" placeholder="Taluka name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gvc">GVC Number <span class="required">*</span></label>
+                            <input type="text" id="gvc" name="gvc" placeholder="Enter GVC number" maxlength="4"
+                                pattern="\d{1,4}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loan">Cattle Loan <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="loan" name="loan" required>
+                                    <option value="">Select loan status</option>
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cattle Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">4</span>
+                        Cattle Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="tagnumber">Tag Number <span class="required">*</span></label>
+                            <input type="text" id="tagnumber" name="tagnumber" class="tag-number"
+                                oninput="formatTagNumber(this)" placeholder="XXXXXX/XXXXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="taglocation">Tag Location <span class="required">*</span> </label>
+                            <div class="select-wrapper">
+                                <select id="taglocation" name="taglocation" required>
+                                    <option value="">Select tag location</option>
+                                    <option value="left ear">Left</option>
+                                    <option value="right ear">Right</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cattletype">Cattle Type <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="cattletype" name="cattletype" required>
+                                    <option value="">Select cattle type</option>
+                                    <option value="cow">Cow</option>
+                                    <option value="buffalo">Buffalo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cattlecolor">Cattle Color <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="cattlecolor" name="cattlecolor" required>
+                                    <option value="">Select cattle color</option>
+                                    <option value="black">Black</option>
+                                    <option value="white">White</option>
+                                    <option value="brown">Brown</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cattletail">Tail Color <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="cattletail" name="cattletail" required>
+                                    <option value="">Select tail color</option>
+                                    <option value="black">Black</option>
+                                    <option value="white">White</option>
+                                    <option value="brown">Brown</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="specialmarks">Special Marks <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="specialmarks" name="specialmarks" required>
+                                    <option value="">Select special marks</option>
+                                    <option value="no">No special marks</option>
+                                    <option value="white marks on forehead">White marks on forehead</option>
+                                    <option value="white dots on forehead">White dots on forehead</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cattle Health & Breeding -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">5</span>
+                        Health & Breeding Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="lactation">Lactation Number <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="lactation" name="lactation" required>
+                                    <option value="">Select lactation number</option>
+                                    <option value="02">02</option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pregnant">Pregnant Status <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="pregnant" name="pregnant" required>
+                                    <option value="">Select pregnancy status</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="milkey">Currently Milking <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="milkey" name="milkey" required>
+                                    <option value="">Select milking status</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="disease">Disease/Cause <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="disease" name="disease" required>
+                                    <option value="">Select disease/cause</option>
+                                    <option value="trypnosomiasis">Trypnosomiasis</option>
+                                    <option value="accute surra">Acute Surra</option>
+                                    <option value="unknown">Unknown Cause</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="treatment">Treatment Given <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="treatment" name="treatment" required>
+                                    <option value="">Select treatment status</option>
+                                    <option value="no">No treatment given</option>
+                                    <option value="yes, paper attached">Yes, treatment paper attached</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loss Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">6</span>
+                        Loss Information
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="lossdate">Loss Date <span class="required">*</span></label>
+                            <input type="date" id="lossdate" name="lossdate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="losstime">Loss Time</label>
+                            <input type="time" id="losstime" name="losstime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="deathtype">Type of Death <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="deathtype" name="deathtype" onchange="toggleSicknessDays()" required>
+                                    <option value="">Select death type</option>
+                                    <option value="sudden death">Sudden Death</option>
+                                    <option value="sickness">Death due to Sickness</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="visit">Visit Day <span class="required">*</span></label>
+                            <div class="select-wrapper">
+                                <select id="visit" name="visit" required>
+                                    <option value="">Select visit day</option>
+                                    <option value="same day">Same Day</option>
+                                    <option value="other day">Other Day</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="sicknessDaysDiv" class="conditional-field">
+                        <div class="form-group">
+                            <label for="dayssick">Number of Days Sick <span class="required">*</span></label>
+                            <input type="number" id="dayssick" name="dayssick" min="1"
+                                placeholder="Enter number of days cattle was sick">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Photo Upload Section -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">7</span>
+                        Photo Documentation
+                    </h2>
+                    <div class="photo-section">
+                        <p style="color: #472c1f; margin-bottom: 10px; font-weight: 600;">
+                            Upload up to 6 photos for documentation (Dead cattle, tag, location, etc.)
+                        </p>
+                        <div class="photo-grid">
+                            <div class="photo-upload" id="photo1">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 1</div>
+                                <input type="file" name="photo1" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo1')">
+                            </div>
+                            <div class="photo-upload" id="photo2">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 2</div>
+                                <input type="file" name="photo2" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo2')">
+                            </div>
+                            <div class="photo-upload" id="photo3">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 3</div>
+                                <input type="file" name="photo3" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo3')">
+                            </div>
+                            <div class="photo-upload" id="photo4">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 4</div>
+                                <input type="file" name="photo4" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo4')">
+                            </div>
+                            <div class="photo-upload" id="photo5">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 5</div>
+                                <input type="file" name="photo5" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo5')">
+                            </div>
+                            <div class="photo-upload" id="photo6">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 6</div>
+                                <input type="file" name="photo6" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo6')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 0 24 24"
+                            fill="rgba(71,44,31,1)">
+                            <path
+                                d="M20 22H4C3.44772 22 3 21.5523 3 21V3C3 2.44772 3.44772 2 4 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V4H5V20H19ZM7 6H11V10H7V6ZM7 12H17V14H7V12ZM7 16H17V18H7V16ZM13 7H17V9H13V7Z">
+                            </path>
+                        </svg>
+                        Generate Claim Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function formatTagNumber(input) {
+            let value = input.value.replace(/\D/g, '').slice(0, 12);
+            if (value.length > 6) {
+                input.value = value.slice(0, 6) + '/' + value.slice(6);
+            } else {
+                input.value = value;
+            }
+        }
+
+        function formatPolicyNumber(input) {
+            let value = input.value.replace(/\D/g, '').slice(0, 8);
+            if (value.length > 4) {
+                input.value = value.slice(0, 4) + '/' + value.slice(4);
+            } else {
+                input.value = value;
+            }
+        }
+
+        function updatePolicyPeriod() {
+            const from = document.getElementById("policyfrom").value;
+            const to = document.getElementById("policyto").value;
+            document.getElementById("policyperiod").value = from && to ? `${from} - ${to}` : '';
+        }
+
+        function toggleSicknessDays() {
+            const type = document.getElementById("deathtype").value;
+            const div = document.getElementById("sicknessDaysDiv");
+            if (type === "sickness") {
+                div.classList.add("show");
+                div.style.display = "block";
+                document.getElementById("dayssick").required = true;
+            } else {
+                div.classList.remove("show");
+                div.style.display = "none";
+                document.getElementById("dayssick").required = false;
+                document.getElementById("dayssick").value = "";
+            }
+        }
+        function toggleInsuredName() {
+            const checkbox = document.getElementById('sameAsOwner');
+            const insuredNameField = document.getElementById('insuredname');
+            const ownerNameField = document.getElementById('ownername');
+
+            if (checkbox.checked) {
+                insuredNameField.value = ownerNameField.value;
+                insuredNameField.readOnly = true;
+                insuredNameField.style.backgroundColor = '#f0f0f0';
+                insuredNameField.style.color = '#666';
+
+                // Update insured name when owner name changes
+                ownerNameField.addEventListener('input', function () {
+                    if (checkbox.checked) {
+                        insuredNameField.value = this.value;
+                    }
+                });
+            } else {
+                insuredNameField.readOnly = false;
+                insuredNameField.style.backgroundColor = '#efeade';
+                insuredNameField.style.color = '#2c1810';
+                insuredNameField.value = '';
+            }
+        }
+        function previewPhoto(input, containerId) {
+            const container = document.getElementById(containerId);
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    // Clear existing content
+                    const textDiv = container.querySelector('.photo-upload-text');
+                    const icon = container.querySelector('.upload-icon');
+
+                    // Create or update preview
+                    let preview = container.querySelector('.photo-preview');
+                    if (!preview) {
+                        preview = document.createElement('img');
+                        preview.className = 'photo-preview';
+                        container.insertBefore(preview, textDiv);
+                    }
+
+                    let fileName = container.querySelector('.photo-name');
+                    if (!fileName) {
+                        fileName = document.createElement('div');
+                        fileName.className = 'photo-name';
+                        container.appendChild(fileName);
+                    }
+
+                    preview.src = e.target.result;
+                    fileName.textContent = input.files[0].name;
+
+                    // Hide icon and change text
+                    icon.style.display = 'none';
+                    textDiv.textContent = 'Click to change photo';
+                    textDiv.style.fontSize = '0.8rem';
+
+                    // Change border color to indicate success
+                    container.style.borderColor = '#27ae60';
+                    container.style.backgroundColor = '#e8f5e8';
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Enhanced form validation
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            const ownerContact = document.getElementById('ownercontact');
+
+            // Owner contact validation
+            ownerContact.addEventListener('input', function () {
+                // Remove any non-digit characters
+                this.value = this.value.replace(/\D/g, '');
+
+                // Limit to 10 digits
+                if (this.value.length > 10) {
+                    this.value = this.value.slice(0, 10);
+                }
+
+                // Validation styling
+                if (this.value.length === 10) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                } else if (this.value.length > 0) {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                }
+            });
+
+            // General validation for required fields
+            inputs.forEach(input => {
+                input.addEventListener('blur', function () {
+                    if (this.value.trim() === '') {
+                        this.classList.add('invalid');
+                        this.classList.remove('valid');
+                    } else {
+                        this.classList.add('valid');
+                        this.classList.remove('invalid');
+                    }
+                });
+
+                input.addEventListener('input', function () {
+                    if (this.classList.contains('invalid') && this.value.trim() !== '') {
+                        this.classList.add('valid');
+                        this.classList.remove('invalid');
+                    }
+                });
+            });
+
+            // Form submission validation
+            form.addEventListener('submit', function (e) {
+                let isValid = true;
+
+                inputs.forEach(input => {
+                    if (input.value.trim() === '') {
+                        input.classList.add('invalid');
+                        isValid = false;
+                    }
+                });
+
+                // Check owner contact specifically
+                if (ownerContact.value.length !== 10) {
+                    ownerContact.classList.add('invalid');
+                    isValid = false;
+                    alert('Please enter a valid 10-digit mobile number');
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields correctly');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
