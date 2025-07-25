@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB limit
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'bmp'}
 
@@ -29,19 +29,19 @@ def format_date_range(date_range_string):
             start_date, end_date = date_range_string.split(' - ')
             formatted_start = format_date(start_date.strip())
             formatted_end = format_date(end_date.strip())
-            return f"{formatted_start} - {formatted_end}"
+            return f"from {formatted_start} to {formatted_end}"
         except:
             return date_range_string
     return date_range_string
 
 def to_sentence_case(text):
     if text:
-        return text.strip().capitalize()
+        return text.strip().title()
     return text
 
 def process_uploaded_images(request):
     uploaded_images = {}
-    for i in range(1, 7):
+    for i in range(1, 13):
         photo_key = f'photo{i}'
         if photo_key in request.files:
             file = request.files[photo_key]
@@ -75,7 +75,7 @@ def generate():
     
     context = {
         'dayssick': request.form.get('dayssick'),
-        'claimdate': format_date(request.form['claimdate']),
+        'claimdate': request.form['claimdate'],
         'date': format_date(request.form['date']),
         'tagnumber': request.form['tagnumber'],
         'cattletype': to_sentence_case(request.form['cattletype']),
@@ -109,7 +109,7 @@ def generate():
     template = DocxTemplate(template_path)
     
     try:
-        for i in range(1, 7):
+        for i in range(1, 13):
             photo_key = f'photo{i}'
             image_path = uploaded_images.get(photo_key)
             if image_path:
@@ -118,7 +118,7 @@ def generate():
                 context[photo_key] = "[No Image Uploaded]"
     except Exception as e:
         print(f"Error processing images: {e}")
-        for i in range(1, 7):
+        for i in range(1, 13):
             context[f'photo{i}'] = "[Image Processing Error]"
 
     template.render(context)

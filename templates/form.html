@@ -428,8 +428,9 @@
                     </h2>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="claimdate">Claim Date <span class="required">*</span></label>
-                            <input type="date" id="claimdate" name="claimdate" required>
+                            <label for="claimdate">Claim Number <span class="required">*</span></label>
+                            <input type="text" id="claimdate" name="claimdate" class="policy-number"
+                                oninput="formatClaimNumber(this)" placeholder="XXX/XXX/XXXX" required>
                         </div>
                         <div class="form-group">
                             <label for="date">Report Date <span class="required">*</span></label>
@@ -476,9 +477,11 @@
                         <div class="form-group full-width">
                             <label>Policy Period <span class="required">*</span></label>
                             <div class="date-range">
-                                <input type="date" id="policyfrom" onchange="updatePolicyPeriod()" required>
+                                <input type="date" id="policyfrom" name="policyfrom" onchange="updatePolicyPeriod()"
+                                    required>
                                 <span>to</span>
-                                <input type="date" id="policyto" onchange="updatePolicyPeriod()" required>
+                                <input type="date" id="policyto" name="policyto" onchange="updatePolicyPeriod()"
+                                    required>
                             </div>
                             <input type="hidden" name="policyperiod" id="policyperiod">
                         </div>
@@ -642,7 +645,7 @@
                                     <option value="">Select disease/cause</option>
                                     <option value="trypnosomiasis">Trypnosomiasis</option>
                                     <option value="accute surra">Acute Surra</option>
-                                    <option value="unknown">Unknown Cause</option>
+                                    <option value="unknown disease">Unknown Disease</option>
                                 </select>
                             </div>
                         </div>
@@ -713,7 +716,7 @@
                     </h2>
                     <div class="photo-section">
                         <p style="color: #472c1f; margin-bottom: 10px; font-weight: 600;">
-                            Upload upto 6 photos
+                            Upload up to 12 photos
                         </p>
                         <div class="photo-grid">
                             <div class="photo-upload" id="photo1">
@@ -781,6 +784,72 @@
                                 <div class="photo-upload-text">Click to upload photo 6</div>
                                 <input type="file" name="photo6" accept="image/*"
                                     onchange="previewPhoto(this, 'photo6')">
+                            </div>
+                            <div class="photo-upload" id="photo7">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 7</div>
+                                <input type="file" name="photo7" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo7')">
+                            </div>
+                            <div class="photo-upload" id="photo8">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 8</div>
+                                <input type="file" name="photo8" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo8')">
+                            </div>
+                            <div class="photo-upload" id="photo9">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 9</div>
+                                <input type="file" name="photo9" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo9')">
+                            </div>
+                            <div class="photo-upload" id="photo10">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 10</div>
+                                <input type="file" name="photo10" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo10')">
+                            </div>
+                            <div class="photo-upload" id="photo11">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 11</div>
+                                <input type="file" name="photo11" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo11')">
+                            </div>
+                            <div class="photo-upload" id="photo12">
+                                <div class="upload-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        height="20px" fill="rgba(255,255,255,1)">
+                                        <path
+                                            d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z">
+                                        </path>
+                                    </svg></div>
+                                <div class="photo-upload-text">Click to upload photo 12</div>
+                                <input type="file" name="photo12" accept="image/*"
+                                    onchange="previewPhoto(this, 'photo12')">
                             </div>
                         </div>
                     </div>
@@ -975,6 +1044,39 @@
                     e.preventDefault();
                     alert('Please fill in all required fields correctly');
                 }
+            });
+        });
+
+        // Add this new function for claim number formatting
+        function formatClaimNumber(input) {
+            let value = input.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
+            if (value.length > 3 && value.length <= 6) {
+                input.value = value.slice(0, 3) + '/' + value.slice(3);
+            } else if (value.length > 6) {
+                input.value = value.slice(0, 3) + '/' + value.slice(3, 6) + '/' + value.slice(6);
+            } else {
+                input.value = value;
+            }
+            input.value = input.value.toUpperCase();
+        }
+
+        // Add capitalization for all text inputs
+        function capitalizeWords(input) {
+            input.value = input.value.split(' ').map(word =>
+                word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).join(' ');
+        }
+
+        // Enhanced form validation with capitalization
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add capitalization to text inputs
+            const textInputs = document.querySelectorAll('input[type="text"]:not(.tag-number):not(.policy-number)');
+            textInputs.forEach(input => {
+                input.addEventListener('blur', function () {
+                    if (this.value.trim() !== '') {
+                        capitalizeWords(this);
+                    }
+                });
             });
         });
     </script>
