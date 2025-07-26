@@ -73,22 +73,25 @@ def generate():
     
     uploaded_images = process_uploaded_images(request)
     
+    # Using single date field for all date requirements
+    single_date = format_date(request.form['date'])
+    
     context = {
         'dayssick': request.form.get('dayssick'),
         'claimdate': request.form['claimdate'],
-        'date': format_date(request.form['date']),
+        'date': single_date,  # Single date field
+        'intimdate': single_date,  # Same date for intimation
+        'invdate': single_date,  # Same date for investigation
+        'lossdate': format_date(request.form['lossdate']),  # Keep loss date separate as it's different
         'tagnumber': request.form['tagnumber'],
         'cattletype': to_sentence_case(request.form['cattletype']),
         'ownername': to_sentence_case(request.form['ownername']),
         'ownercontact': request.form['ownercontact'],
         'location': to_sentence_case(request.form['location']),
         'taluka': to_sentence_case(request.form['taluka']),
-        'lossdate': format_date(request.form['lossdate']),
         'losstime': request.form['losstime'],
-        'invdate': format_date(request.form['invdate']),
         'policynumber': request.form['policynumber'],
         'policyperiod': format_date_range(request.form['policyperiod']),
-        'intimdate': format_date(request.form['intimdate']),
         'insuredname': to_sentence_case(request.form['insuredname']),
         'loan': to_sentence_case(request.form['loan']),
         'disease': to_sentence_case(request.form['disease']),
