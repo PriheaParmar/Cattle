@@ -227,119 +227,6 @@
             }
         }
 
-        /* Improved Photo Upload Section */
-        .photo-section {
-            background: #f4f0e8;
-            border: 2px dashed #B17457;
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-
-        .photo-section-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .photo-section-header h3 {
-            color: #472c1f;
-            font-size: 1.2rem;
-            margin-bottom: 8px;
-        }
-
-        .photo-section-header p {
-            color: #8b6f47;
-            font-size: 0.9rem;
-        }
-
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
-        }
-
-        .photo-upload {
-            position: relative;
-            border: 2px dashed #8b6f47;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s ease;
-            background: #faf8f3;
-            min-height: 140px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .photo-upload:hover {
-            border-color: #472c1f;
-            background: #f0ede5;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .photo-upload input[type="file"] {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-        }
-
-        .photo-upload-text {
-            color: #8b6f47;
-            font-size: 0.9rem;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-
-        .photo-preview {
-            max-width: 100%;
-            max-height: 90px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .photo-name {
-            font-size: 0.75rem;
-            color: #472c1f;
-            word-break: break-all;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-
-        .upload-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #B17457 0%, #472c1f 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .photo-upload.uploaded {
-            border-color: #27ae60;
-            background: #e8f5e8;
-        }
-
-        .photo-upload.uploaded .upload-icon {
-            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-        }
-
         .submit-section {
             background: linear-gradient(135deg, #B17457 0%, #472c1f 100%);
             margin: 40px -40px -40px -40px;
@@ -370,6 +257,29 @@
             color: #e74c3c;
         }
 
+        /* Progress indicator */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(135deg, #B17457 0%, #472c1f 100%);
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        /* Success message */
+        .success-message {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .form-container {
                 padding: 20px;
@@ -385,16 +295,6 @@
 
             .form-group.half-width {
                 grid-template-columns: 1fr;
-            }
-
-            .photo-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                gap: 15px;
-            }
-
-            .photo-upload {
-                min-height: 120px;
-                padding: 15px;
             }
         }
 
@@ -429,12 +329,14 @@
         }
 
         /* Enhanced validation styling */
-        .form-group input.valid {
+        .form-group input.valid,
+        .form-group select.valid {
             border-color: #27ae60;
             background: #e8f5e8;
         }
 
-        .form-group input.invalid {
+        .form-group input.invalid,
+        .form-group select.invalid {
             border-color: #e74c3c;
             background: #ffeaea;
         }
@@ -444,10 +346,20 @@
             justify-content: space-between;
             margin-bottom: -10px;
         }
+
+        /* Tooltip for help */
+        .help-text {
+            font-size: 0.8rem;
+            color: #8b6f47;
+            margin-top: 5px;
+            font-style: italic;
+        }
     </style>
 </head>
 
 <body>
+    <div class="progress-bar" id="progressBar"></div>
+    
     <div class="container">
         <div class="header">
             <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="40px" fill="currentColor">
@@ -455,9 +367,14 @@
                         d="M5 18.89H6.41421L15.7279 9.57627L14.3137 8.16206L5 17.4758V18.89ZM21 20.89H3V16.6473L16.435 3.21231C16.8256 2.82179 17.4587 2.82179 17.8492 3.21231L20.6777 6.04074C21.0682 6.43126 21.0682 7.06443 20.6777 7.45495L9.24264 18.89H21V20.89ZM15.7279 6.74785L17.1421 8.16206L18.5563 6.74785L17.1421 5.33363L15.7279 6.74785Z">
                     </path>
                 </svg> Cattle Insurance Claim Report</h1>
+            <p>Complete the form below to generate your claim report</p>
         </div>
 
         <div class="form-container">
+            <div class="success-message" id="successMessage">
+                ✓ All fields are properly filled! Ready to generate report.
+            </div>
+            
             <form method="POST" action="/generate" enctype="multipart/form-data">
 
                 <!-- Basic Claim Information -->
@@ -471,6 +388,7 @@
                             <label for="claimdate">Claim Number <span class="required">*</span></label>
                             <input type="text" id="claimdate" name="claimdate" class="policy-number"
                                 oninput="formatClaimNumber(this)" placeholder="XXX/XXX/XXXX" required>
+                            <div class="help-text">Format: ABC/123/YYYY</div>
                         </div>
                         <div class="form-group">
                             <label for="date">Report Date <span class="required">*</span></label>
@@ -490,6 +408,7 @@
                             <label for="policynumber">Policy Number <span class="required">*</span></label>
                             <input type="text" id="policynumber" name="policynumber" class="policy-number"
                                 oninput="formatPolicyNumber(this)" placeholder="XXXX/XXXX" required>
+                            <div class="help-text">Format: 1234/5678</div>
                         </div>
                         <div class="form-group">
                             <div class="name">
@@ -536,6 +455,7 @@
                             <label for="ownercontact">Owner Contact <span class="required">*</span></label>
                             <input type="tel" id="ownercontact" name="ownercontact" maxlength="10" pattern="\d{10}"
                                 title="Enter exactly 10 digits" placeholder="10-digit mobile number" required>
+                            <div class="help-text">Enter 10-digit mobile number only</div>
                         </div>
                         <div class="form-group">
                             <label for="location">Location <span class="required">*</span></label>
@@ -549,6 +469,7 @@
                             <label for="gvc">GVC Number <span class="required">*</span></label>
                             <input type="text" id="gvc" name="gvc" placeholder="Enter GVC number" maxlength="4"
                                 pattern="\d{1,4}" required>
+                            <div class="help-text">1-4 digit number only</div>
                         </div>
 
                         <div class="form-group">
@@ -575,6 +496,7 @@
                             <label for="tagnumber">Tag Number <span class="required">*</span></label>
                             <input type="text" id="tagnumber" name="tagnumber" class="tag-number"
                                 oninput="formatTagNumber(this)" placeholder="XXXXXX/XXXXXX" required>
+                            <div class="help-text">Format: 123456/789012</div>
                         </div>
                         <div class="form-group">
                             <label for="taglocation">Tag Location <span class="required">*</span> </label>
@@ -602,6 +524,7 @@
                                 <select id="cattlecolor" name="cattlecolor" required>
                                     <option value="">Select cattle color</option>
                                     <option value="black">Black</option>
+                                    <option value="black & white">Black & White</option>
                                     <option value="white">White</option>
                                     <option value="brown">Brown</option>
                                 </select>
@@ -613,6 +536,7 @@
                                 <select id="cattletail" name="cattletail" required>
                                     <option value="">Select tail color</option>
                                     <option value="black">Black</option>
+                                    <option value="black & white">Black & White</option>
                                     <option value="white">White</option>
                                     <option value="brown">Brown</option>
                                 </select>
@@ -647,6 +571,7 @@
                                     <option value="02">02</option>
                                     <option value="03">03</option>
                                     <option value="04">04</option>
+                                    <option value="05">05</option>
                                 </select>
                             </div>
                         </div>
@@ -740,112 +665,6 @@
                     </div>
                 </div>
 
-                <!-- Photo Upload Section -->
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <span class="section-icon">7</span>
-                        Photo Documentation
-                    </h2>
-                    <div class="photo-section">
-                        <div class="photo-section-header">
-                            <h3>Upload Investigation Photos</h3>
-                            <p>Click on any box below to upload photos (Maximum 12 photos allowed)</p>
-                        </div>
-                        <div class="photo-grid">
-                            <div class="photo-upload" id="photo1">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 1</div>
-                                <input type="file" name="photo1" accept="image/*" onchange="previewPhoto(this, 'photo1')">
-                            </div>
-                            <div class="photo-upload" id="photo2">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 2</div>
-                                <input type="file" name="photo2" accept="image/*" onchange="previewPhoto(this, 'photo2')">
-                            </div>
-                            <div class="photo-upload" id="photo3">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 3</div>
-                                <input type="file" name="photo3" accept="image/*" onchange="previewPhoto(this, 'photo3')">
-                            </div>
-                            <div class="photo-upload" id="photo4">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 4</div>
-                                <input type="file" name="photo4" accept="image/*" onchange="previewPhoto(this, 'photo4')">
-                            </div>
-                            <div class="photo-upload" id="photo5">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 5</div>
-                                <input type="file" name="photo5" accept="image/*" onchange="previewPhoto(this, 'photo5')">
-                            </div>
-                            <div class="photo-upload" id="photo6">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 6</div>
-                                <input type="file" name="photo6" accept="image/*" onchange="previewPhoto(this, 'photo6')">
-                            </div>
-                            <div class="photo-upload" id="photo7">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 7</div>
-                                <input type="file" name="photo7" accept="image/*" onchange="previewPhoto(this, 'photo7')">
-                            </div>
-                            <div class="photo-upload" id="photo8">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 8</div>
-                                <input type="file" name="photo8" accept="image/*" onchange="previewPhoto(this, 'photo8')">
-                            </div>
-                            <div class="photo-upload" id="photo9">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 9</div>
-                                <input type="file" name="photo9" accept="image/*" onchange="previewPhoto(this, 'photo9')">
-                            </div>
-                            <div class="photo-upload" id="photo10">
-                                <div class="upload-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" height="20px" fill="currentColor">
-                                        <path d="M9 3H15L17 5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7L9 3ZM12 19C15.3137 19 18 16.3137 18 13C18 9.68629 15.3137 7 12 7C8.68629 7 6 9.68629 6 13C6 16.3137 8.68629 19 12 19ZM12 17C9.79086 17 8 15.2091 8 13C8 10.7909 9.79086 9 12 9C14.2091 9 16 10.7909 16 13C16 15.2091 14.2091 17 12 17Z"></path>
-                                    </svg>
-                                </div>
-                                <div class="photo-upload-text">Photo 10</div>
-                                <input type="file" name="photo10" accept="image/*" onchange="previewPhoto(this, 'photo10')">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="submit-section">
                     <button type="submit" class="submit-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" height="15px" viewBox="0 0 24 24"
@@ -862,6 +681,29 @@
     </div>
 
     <script>
+        // Progress bar functionality
+        function updateProgressBar() {
+            const form = document.querySelector('form');
+            const requiredInputs = form.querySelectorAll('input[required], select[required]');
+            let filledInputs = 0;
+            
+            requiredInputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    filledInputs++;
+                }
+            });
+            
+            const progress = (filledInputs / requiredInputs.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Show success message when all fields are filled
+            if (progress === 100) {
+                document.getElementById('successMessage').style.display = 'block';
+            } else {
+                document.getElementById('successMessage').style.display = 'none';
+            }
+        }
+
         function formatTagNumber(input) {
             let value = input.value.replace(/\D/g, '').slice(0, 12);
             if (value.length > 6) {
@@ -869,6 +711,7 @@
             } else {
                 input.value = value;
             }
+            updateProgressBar();
         }
 
         function formatPolicyNumber(input) {
@@ -878,6 +721,7 @@
             } else {
                 input.value = value;
             }
+            updateProgressBar();
         }
 
         function formatClaimNumber(input) {
@@ -890,12 +734,14 @@
                 input.value = value;
             }
             input.value = input.value.toUpperCase();
+            updateProgressBar();
         }
 
         function updatePolicyPeriod() {
             const from = document.getElementById("policyfrom").value;
             const to = document.getElementById("policyto").value;
             document.getElementById("policyperiod").value = from && to ? `${from} - ${to}` : '';
+            updateProgressBar();
         }
 
         function toggleSicknessDays() {
@@ -911,6 +757,7 @@
                 document.getElementById("dayssick").required = false;
                 document.getElementById("dayssick").value = "";
             }
+            updateProgressBar();
         }
 
         function toggleInsuredName() {
@@ -927,6 +774,7 @@
                 ownerNameField.addEventListener('input', function () {
                     if (checkbox.checked) {
                         insuredNameField.value = this.value;
+                        updateProgressBar();
                     }
                 });
             } else {
@@ -935,44 +783,7 @@
                 insuredNameField.style.color = '#2c1810';
                 insuredNameField.value = '';
             }
-        }
-
-        function previewPhoto(input, containerId) {
-            const container = document.getElementById(containerId);
-
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    const textDiv = container.querySelector('.photo-upload-text');
-                    const icon = container.querySelector('.upload-icon');
-
-                    let preview = container.querySelector('.photo-preview');
-                    if (!preview) {
-                        preview = document.createElement('img');
-                        preview.className = 'photo-preview';
-                        container.insertBefore(preview, textDiv);
-                    }
-
-                    let fileName = container.querySelector('.photo-name');
-                    if (!fileName) {
-                        fileName = document.createElement('div');
-                        fileName.className = 'photo-name';
-                        container.appendChild(fileName);
-                    }
-
-                    preview.src = e.target.result;
-                    fileName.textContent = input.files[0].name;
-
-                    icon.style.display = 'none';
-                    textDiv.textContent = 'Change Photo';
-                    textDiv.style.fontSize = '0.8rem';
-
-                    container.classList.add('uploaded');
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
+            updateProgressBar();
         }
 
         function capitalizeWords(input) {
@@ -986,6 +797,9 @@
             const inputs = form.querySelectorAll('input[required], select[required]');
             const ownerContact = document.getElementById('ownercontact');
 
+            // Set today's date as default for report date
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
             ownerContact.addEventListener('input', function () {
                 this.value = this.value.replace(/\D/g, '');
                 if (this.value.length > 10) {
@@ -998,6 +812,7 @@
                     this.classList.add('invalid');
                     this.classList.remove('valid');
                 }
+                updateProgressBar();
             });
 
             inputs.forEach(input => {
@@ -1016,7 +831,10 @@
                         this.classList.add('valid');
                         this.classList.remove('invalid');
                     }
+                    updateProgressBar();
                 });
+
+                input.addEventListener('change', updateProgressBar);
             });
 
             const textInputs = document.querySelectorAll('input[type="text"]:not(.tag-number):not(.policy-number)');
@@ -1046,8 +864,17 @@
                 if (!isValid) {
                     e.preventDefault();
                     alert('Please fill in all required fields correctly');
+                    // Scroll to first invalid field
+                    const firstInvalid = document.querySelector('.invalid');
+                    if (firstInvalid) {
+                        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstInvalid.focus();
+                    }
                 }
             });
+
+            // Initialize progress bar
+            updateProgressBar();
         });
     </script>
 </body>
