@@ -28,6 +28,9 @@ def format_date_range(date_range_string):
 
 def to_sentence_case(text):
     if text:
+        # Handle special case for HF Cow
+        if text.lower() == 'hf cow':
+            return 'HF Cow'
         return text.strip().title()
     return text
 
@@ -43,10 +46,10 @@ def generate():
     context = {
         'dayssick': request.form.get('dayssick'),
         'claimdate': request.form['claimdate'],
-        'date': single_date,  # Single date field
-        'intimdate': single_date,  # Same date for intimation
-        'invdate': single_date,  # Same date for investigation
-        'lossdate': format_date(request.form['lossdate']),  # Keep loss date separate as it's different
+        'date': single_date,
+        'intimdate': single_date,
+        'invdate': single_date,
+        'lossdate': format_date(request.form['lossdate']),
         'tagnumber': request.form['tagnumber'],
         'cattletype': to_sentence_case(request.form['cattletype']),
         'ownername': to_sentence_case(request.form['ownername']),
