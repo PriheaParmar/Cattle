@@ -28,7 +28,6 @@ def format_date_range(date_range_string):
 
 def to_sentence_case(text):
     if text:
-        # Handle special case for HF Cow
         if text.lower() == 'hf cow':
             return 'HF Cow'
         return text.strip().title()
@@ -40,9 +39,8 @@ def form():
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    # Using single date field for all date requirements
     single_date = format_date(request.form['date'])
-    
+   
     context = {
         'dayssick': request.form.get('dayssick'),
         'claimdate': request.form['claimdate'],
@@ -72,23 +70,26 @@ def generate():
         'specialmarks': to_sentence_case(request.form['specialmarks']),
         'treatment': to_sentence_case(request.form['treatment']),
         'deathtype': to_sentence_case(request.form['deathtype']),
-        'visit': to_sentence_case(request.form['visit'])
+        'visit': to_sentence_case(request.form['visit']),
+        
+        # NEW BANK DETAILS
+        'accountnumber': request.form['accountnumber'],
+        'ifsccode': request.form['ifsccode'].upper(),
+        'bankname': to_sentence_case(request.form['bankname'])
     }
-
+    
     template_path = os.path.join(os.getcwd(), 'template.docx')
     template = DocxTemplate(template_path)
-
     template.render(context)
-
+    
     location = context['location'].replace(' ', '-').upper()
     taluka = context['taluka'].replace(' ', '-').upper()
     ownername = context['ownername'].replace(' ', '-').upper()
     tag_number = context['tagnumber'][-6:]
     output_filename = f"{location}_{taluka}_{ownername}_{tag_number}.docx"
     output_path = os.path.join(tempfile.gettempdir(), output_filename)
-
     template.save(output_path)
-
+    
     return send_file(output_path, as_attachment=True)
 
 if __name__ == '__main__':

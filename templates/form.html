@@ -124,7 +124,6 @@
             color: #2c1810;
         }
 
-        /* Enhanced placeholder styling */
         input::placeholder,
         textarea::placeholder {
             color: #8b6f47;
@@ -141,7 +140,6 @@
             transform: translateY(-1px);
         }
 
-        /* Custom Select Styling */
         .select-wrapper {
             position: relative;
             display: block;
@@ -167,7 +165,6 @@
             background-size: 16px;
         }
 
-        /* When select has a value, change text color */
         select:valid {
             color: #2c1810;
         }
@@ -176,7 +173,6 @@
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23472c1f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
         }
 
-        /* Custom option styling */
         select option {
             background: #efeade;
             color: #2c1810;
@@ -257,7 +253,6 @@
             color: #e74c3c;
         }
 
-        /* Progress indicator */
         .progress-bar {
             position: fixed;
             top: 0;
@@ -269,7 +264,6 @@
             z-index: 1000;
         }
 
-        /* Success message */
         .success-message {
             background: #d4edda;
             border: 1px solid #c3e6cb;
@@ -298,7 +292,6 @@
             }
         }
 
-        /* Specific styling for certain fields */
         input[type="tel"] {
             letter-spacing: 1px;
         }
@@ -328,7 +321,17 @@
             letter-spacing: 1px;
         }
 
-        /* Enhanced validation styling */
+        .account-number {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+
+        .ifsc-code {
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
         .form-group input.valid,
         .form-group select.valid {
             border-color: #27ae60;
@@ -347,7 +350,6 @@
             margin-bottom: -10px;
         }
 
-        /* Tooltip for help */
         .help-text {
             font-size: 0.8rem;
             color: #8b6f47;
@@ -485,10 +487,39 @@
                     </div>
                 </div>
 
-                <!-- Cattle Information -->
+                <!-- Bank Details Section -->
                 <div class="form-section">
                     <h2 class="section-title">
                         <span class="section-icon">4</span>
+                        Bank Account Details
+                    </h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="accountnumber">Account Number <span class="required">*</span></label>
+                            <input type="text" id="accountnumber" name="accountnumber" class="account-number"
+                                oninput="formatAccountNumber(this)" placeholder="Enter account number" 
+                                maxlength="18" pattern="\d{9,18}" required>
+                            <div class="help-text">9-18 digit account number</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ifsccode">IFSC Code <span class="required">*</span></label>
+                            <input type="text" id="ifsccode" name="ifsccode" class="ifsc-code"
+                                oninput="formatIFSC(this)" placeholder="Enter IFSC code" 
+                                maxlength="11" pattern="[A-Z]{4}0[A-Z0-9]{6}" required>
+                            <div class="help-text">Format: ABCD0123456 (11 characters)</div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="bankname">Bank Name <span class="required">*</span></label>
+                            <input type="text" id="bankname" name="bankname" 
+                                placeholder="Enter bank name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cattle Information -->
+                <div class="form-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">5</span>
                         Cattle Information
                     </h2>
                     <div class="form-grid">
@@ -559,7 +590,7 @@
                 <!-- Cattle Health & Breeding -->
                 <div class="form-section">
                     <h2 class="section-title">
-                        <span class="section-icon">5</span>
+                        <span class="section-icon">6</span>
                         Health & Breeding Information
                     </h2>
                     <div class="form-grid">
@@ -623,7 +654,7 @@
                 <!-- Loss Information -->
                 <div class="form-section">
                     <h2 class="section-title">
-                        <span class="section-icon">6</span>
+                        <span class="section-icon">7</span>
                         Loss Information
                     </h2>
                     <div class="form-grid">
@@ -682,7 +713,6 @@
     </div>
 
     <script>
-        // Progress bar functionality
         function updateProgressBar() {
             const form = document.querySelector('form');
             const requiredInputs = form.querySelectorAll('input[required], select[required]');
@@ -697,7 +727,6 @@
             const progress = (filledInputs / requiredInputs.length) * 100;
             document.getElementById('progressBar').style.width = progress + '%';
             
-            // Show success message when all fields are filled
             if (progress === 100) {
                 document.getElementById('successMessage').style.display = 'block';
             } else {
@@ -735,6 +764,18 @@
                 input.value = value;
             }
             input.value = input.value.toUpperCase();
+            updateProgressBar();
+        }
+
+        function formatAccountNumber(input) {
+            let value = input.value.replace(/\D/g, '').slice(0, 18);
+            input.value = value;
+            updateProgressBar();
+        }
+
+        function formatIFSC(input) {
+            let value = input.value.replace(/[^a-zA-Z0-9]/g, '').slice(0, 11);
+            input.value = value.toUpperCase();
             updateProgressBar();
         }
 
@@ -797,8 +838,9 @@
             const form = document.querySelector('form');
             const inputs = form.querySelectorAll('input[required], select[required]');
             const ownerContact = document.getElementById('ownercontact');
+            const accountNumber = document.getElementById('accountnumber');
+            const ifscCode = document.getElementById('ifsccode');
 
-            // Set today's date as default for report date
             document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
             ownerContact.addEventListener('input', function () {
@@ -814,6 +856,27 @@
                     this.classList.remove('valid');
                 }
                 updateProgressBar();
+            });
+
+            accountNumber.addEventListener('input', function () {
+                if (this.value.length >= 9 && this.value.length <= 18) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                } else if (this.value.length > 0) {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                }
+            });
+
+            ifscCode.addEventListener('input', function () {
+                const ifscPattern = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+                if (ifscPattern.test(this.value)) {
+                    this.classList.add('valid');
+                    this.classList.remove('invalid');
+                } else if (this.value.length > 0) {
+                    this.classList.add('invalid');
+                    this.classList.remove('valid');
+                }
             });
 
             inputs.forEach(input => {
@@ -838,7 +901,7 @@
                 input.addEventListener('change', updateProgressBar);
             });
 
-            const textInputs = document.querySelectorAll('input[type="text"]:not(.tag-number):not(.policy-number)');
+            const textInputs = document.querySelectorAll('input[type="text"]:not(.tag-number):not(.policy-number):not(.account-number):not(.ifsc-code)');
             textInputs.forEach(input => {
                 input.addEventListener('blur', function () {
                     if (this.value.trim() !== '') {
@@ -862,10 +925,22 @@
                     alert('Please enter a valid 10-digit mobile number');
                 }
 
+                if (accountNumber.value.length < 9 || accountNumber.value.length > 18) {
+                    accountNumber.classList.add('invalid');
+                    isValid = false;
+                    alert('Please enter a valid account number (9-18 digits)');
+                }
+
+                const ifscPattern = /^[A-Z]{4}0[A-Z0-9]{6}$/;
+                if (!ifscPattern.test(ifscCode.value)) {
+                    ifscCode.classList.add('invalid');
+                    isValid = false;
+                    alert('Please enter a valid IFSC code (Format: ABCD0123456)');
+                }
+
                 if (!isValid) {
                     e.preventDefault();
                     alert('Please fill in all required fields correctly');
-                    // Scroll to first invalid field
                     const firstInvalid = document.querySelector('.invalid');
                     if (firstInvalid) {
                         firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -874,7 +949,6 @@
                 }
             });
 
-            // Initialize progress bar
             updateProgressBar();
         });
     </script>
