@@ -53,11 +53,15 @@ def form():
     return render_template('form.html')
 
 @app.route('/generate', methods=['POST'])
-def generate():
+def generate(): 
+    
+    claimdate = request.form.get('claimdate', '').strip().upper()
+
     try:
         single_date = format_date(request.form['date'])
        
         context = {
+            'claimdate': claimdate,
             'dayssick': request.form.get('dayssick'),
             'date': single_date,
             'intimdate': single_date,
